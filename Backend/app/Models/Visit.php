@@ -1,0 +1,39 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class Visit extends Model
+{
+    protected $fillable = [
+        'school_id',
+        'contact_id',
+        'rep_id',
+        'visit_date',
+        'notes',
+        'interest_level',
+        'lat',
+        'lng',
+    ];
+
+    public function school(): BelongsTo
+    {
+        return $this->belongsTo(School::class);
+    }
+
+    public function contact(): BelongsTo
+    {
+        return $this->belongsTo(Contact::class);
+    }
+
+    public function rep(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'rep_id');
+    }
+
+    public function books(): HasMany
+{
+    return $this->hasMany(VisitBook::class);
+}
+}

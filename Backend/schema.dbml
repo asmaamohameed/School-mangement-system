@@ -1,0 +1,121 @@
+Table users {
+  id bigint [primary key]
+  name varchar
+  email varchar
+  password varchar
+  role varchar
+  is_active boolean
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table schools {
+  id bigint [primary key]
+  assigned_rep_id bigint
+  name varchar
+  stage varchar
+  assigned_to bigint
+  school_type varchar
+  city varchar
+  address text
+  principal_name varchar
+  principal_mobile varchar
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table contacts {
+  id bigint [primary key]
+  school_id bigint
+  name varchar
+  position varchar
+  mobile varchar
+  email varchar
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table visits {
+  id bigint [primary key]
+  school_id bigint
+  contact_id bigint
+  rep_id bigint
+  visit_date date
+  notes text
+  interest_level varchar
+  lat decimal
+  lng decimal
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table visit_books {
+  id bigint [primary key]
+  visit_id bigint
+  book_title varchar
+  grade_level varchar
+  created_at timestamp
+}
+
+Table pipeline_history {
+  id bigint [primary key]
+  school_id bigint
+  changed_by bigint
+  from_stage varchar
+  to_stage varchar
+  notes text
+  changed_at timestamp
+}
+
+Table follow_ups {
+  id bigint [primary key]
+  school_id bigint
+  done_by bigint
+  follow_up_date date
+  type varchar
+  summary text
+  next_action text
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table tasks {
+  id bigint [primary key]
+  school_id bigint
+  assigned_to bigint
+  created_by bigint
+  title varchar
+  description text
+  status varchar
+  due_date date
+  created_at timestamp
+  updated_at timestamp
+}
+
+// schools
+Ref: schools.assigned_rep_id > users.id
+
+// contacts
+Ref: contacts.school_id > schools.id
+
+// visits
+Ref: visits.school_id > schools.id
+Ref: visits.contact_id > contacts.id
+Ref: visits.rep_id > users.id
+
+// visit_books
+Ref: visit_books.visit_id > visits.id
+
+
+// pipeline_history
+Ref: pipeline_history.school_id > schools.id
+Ref: pipeline_history.changed_by > users.id
+
+// follow_ups
+Ref: follow_ups.school_id > schools.id
+Ref: follow_ups.done_by > users.id
+
+// tasks
+Ref: tasks.school_id > schools.id
+Ref: tasks.assigned_to > users.id
+Ref: tasks.created_by > users.id
