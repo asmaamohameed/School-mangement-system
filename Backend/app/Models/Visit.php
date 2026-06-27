@@ -22,6 +22,12 @@ class Visit extends Model
         'lng',
     ];
 
+    protected $casts = [
+        'visit_date' => 'date',
+        'lat' => 'decimal:8',
+        'lng' => 'decimal:8',
+    ];
+
     public function school(): BelongsTo
     {
         return $this->belongsTo(School::class);
