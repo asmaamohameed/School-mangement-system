@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Enums\FollowUpType;
 
 class FollowUp extends Model
 {
@@ -17,6 +18,11 @@ class FollowUp extends Model
         'type',
         'summary',
         'next_action',
+    ];
+
+    protected $casts = [
+        'type' => FollowUpType::class,
+        'follow_up_date' => 'datetime',
     ];
 
     public function school(): BelongsTo

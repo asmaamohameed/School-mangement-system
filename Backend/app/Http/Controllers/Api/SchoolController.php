@@ -6,8 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\SchoolResource;
 use App\Models\School;
 use App\Enums\UserRole;
+use App\Enums\SchoolStage;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Validation\Rule;
 
 class SchoolController extends Controller
 {
@@ -37,7 +39,7 @@ class SchoolController extends Controller
         ]);
 
         $user = $request->user();
-        
+
         $school = School::create(array_merge($validated, [
             'stage' => 'lead',
             'assigned_rep_id' => $user->role === UserRole::SALES_REP ? $user->id : null,
@@ -66,7 +68,7 @@ class SchoolController extends Controller
             'address' => ['sometimes', 'required', 'string'],
             'principal_name' => ['nullable', 'string'],
             'principal_mobile' => ['nullable', 'string'],
-            'stage' => ['sometimes', 'required', 'string'], 
+            'stage' => ['sometimes', 'required', 'string'],
         ]);
 
         $school->update($validated);
@@ -88,6 +90,22 @@ class SchoolController extends Controller
 
         return response()->json([
             'message' => 'School deleted successfully.'
+        ], 200);
+    }
+
+    public function updateStage(Request $request, School $school): JsonResponse
+    {
+        $validated = $request->validate([
+            'stage' => ['required', Rule::enum(SchoolStage::class)],
+        ]);
+
+        $school->update([
+            'stage' => $validated['stage']
+        ]);
+
+        return response()->json([
+            'message' => 'School moved to stage ' . $school->stage->value . ' successfully.',
+            'current_stage' => $school->stage->value
         ], 200);
     }
 }

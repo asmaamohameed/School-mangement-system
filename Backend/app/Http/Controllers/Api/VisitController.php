@@ -73,6 +73,6 @@ class VisitController extends Controller
 
     public function show(Visit $visit): VisitResource
     {
-        return new VisitResource($visit->load(['school', 'contact', 'representative', 'books']));
+        return new VisitResource($visit->load(['school', 'contact', 'assignedRep', 'books']));
     }
 }
