@@ -1,11 +1,11 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
-use App\Http\Controllers\Api\SchoolController;
 use App\Http\Controllers\Api\ContactController;
-use App\Http\Controllers\Api\VisitController;
 use App\Http\Controllers\Api\FollowUpController;
+use App\Http\Controllers\Api\SchoolController;
+use App\Http\Controllers\Api\VisitController;
+use Illuminate\Support\Facades\Route;
 
 Route::post('login', [AuthController::class, 'login']);
 
@@ -18,7 +18,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::middleware(['role:admin,sales_rep'])->group(function () {
         Route::post('schools', [SchoolController::class, 'store']);
     });
-    
+
     // Contact routes
     Route::apiResource('contacts', ContactController::class);
     // Visit routes
@@ -26,6 +26,5 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Follow up routes
     Route::apiResource('follow-ups', FollowUpController::class)->only(['index', 'store', 'show']);
-
 
 });

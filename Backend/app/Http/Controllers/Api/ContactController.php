@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use App\Models\Contact;
 use App\Http\Resources\ContactResource;
+use App\Models\Contact;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 class ContactController extends Controller
 {
@@ -35,16 +35,14 @@ class ContactController extends Controller
 
         return response()->json([
             'message' => 'contact created successfully',
-            'data' => new ContactResource($contact)
+            'data' => new ContactResource($contact),
         ], 201);
     }
-
 
     public function show(Contact $contact): ContactResource
     {
         return new ContactResource($contact->load('school'));
     }
-
 
     public function update(Request $request, Contact $contact): JsonResponse
     {
@@ -60,16 +58,16 @@ class ContactController extends Controller
 
         return response()->json([
             'message' => 'contact updated successfully',
-            'data' => new ContactResource($contact->load('school'))
+            'data' => new ContactResource($contact->load('school')),
         ], 200);
     }
-  
+
     public function destroy(Contact $contact): JsonResponse
     {
         $contact->delete();
 
         return response()->json([
-            'message' => 'contact deleted successfully'
+            'message' => 'contact deleted successfully',
         ], 200);
     }
 }

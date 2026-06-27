@@ -2,15 +2,15 @@
 
 namespace App\Models;
 
+use App\Enums\FollowUpType;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use App\Enums\FollowUpType;
 
 class FollowUp extends Model
 {
     use HasFactory;
-    
+
     protected $fillable = [
         'school_id',
         'done_by',
@@ -29,6 +29,7 @@ class FollowUp extends Model
     {
         return $this->belongsTo(School::class);
     }
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'done_by');

@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Enums\SchoolStage;
+use App\Enums\UserRole;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\SchoolResource;
 use App\Models\School;
-use App\Enums\UserRole;
-use App\Enums\SchoolStage;
-use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
 class SchoolController extends Controller
@@ -48,7 +48,7 @@ class SchoolController extends Controller
 
         return response()->json([
             'message' => 'School created successfully',
-            'data' => new SchoolResource($school)
+            'data' => new SchoolResource($school),
         ], 201);
     }
 
@@ -75,7 +75,7 @@ class SchoolController extends Controller
 
         return response()->json([
             'message' => 'School updated successfully',
-            'data' => new SchoolResource($school->load('assignedRep'))
+            'data' => new SchoolResource($school->load('assignedRep')),
         ], 200);
     }
 
@@ -83,13 +83,13 @@ class SchoolController extends Controller
     {
         if ($request->user()->role->value !== 'admin') {
             return response()->json([
-                'message' => 'Sorry, only admins can delete schools.'
+                'message' => 'Sorry, only admins can delete schools.',
             ], 403);
         }
         $school->delete();
 
         return response()->json([
-            'message' => 'School deleted successfully.'
+            'message' => 'School deleted successfully.',
         ], 200);
     }
 
@@ -100,12 +100,12 @@ class SchoolController extends Controller
         ]);
 
         $school->update([
-            'stage' => $validated['stage']
+            'stage' => $validated['stage'],
         ]);
 
         return response()->json([
-            'message' => 'School moved to stage ' . $school->stage->value . ' successfully.',
-            'current_stage' => $school->stage->value
+            'message' => 'School moved to stage '.$school->stage->value.' successfully.',
+            'current_stage' => $school->stage->value,
         ], 200);
     }
 }

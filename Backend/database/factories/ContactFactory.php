@@ -3,8 +3,9 @@
 namespace Database\Factories;
 
 use App\Models\Contact;
-use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Models\School;
+use Illuminate\Database\Eloquent\Factories\Factory;
+
 /**
  * @extends Factory<Contact>
  */

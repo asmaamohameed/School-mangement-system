@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use Illuminate\Http\JsonResponse;
-use App\Models\FollowUp;
-use App\Http\Resources\FollowUpResource;
 use App\Enums\FollowUpType;
 use App\Enums\UserRole;
+use App\Http\Controllers\Controller;
+use App\Http\Resources\FollowUpResource;
+use App\Models\FollowUp;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
 class FollowUpController extends Controller
@@ -40,12 +40,12 @@ class FollowUpController extends Controller
         ]);
 
         $followUp = FollowUp::create(array_merge($validated, [
-            'done_by' => $request->user()->id
+            'done_by' => $request->user()->id,
         ]));
 
         return response()->json([
             'message' => 'Follow up created successfully.',
-            'data' => new FollowUpResource($followUp->load(['school', 'user']))
+            'data' => new FollowUpResource($followUp->load(['school', 'user'])),
         ], 201);
     }
 

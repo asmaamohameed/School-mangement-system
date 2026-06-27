@@ -2,14 +2,14 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
-use App\Models\User;
 use App\Enums\UserRole;
+use App\Models\User;
+use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
 class UserSeeder extends Seeder
 {
-public function run(): void
+    public function run(): void
     {
         // 1. Admin Account
         User::create([
@@ -37,6 +37,6 @@ public function run(): void
             'role' => UserRole::CUSTOMER_SERVICE,
             'is_active' => true,
         ]);
-        
+
     }
 }

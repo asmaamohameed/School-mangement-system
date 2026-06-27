@@ -2,15 +2,15 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Visit extends Model
 {
     use HasFactory;
-    
+
     protected $fillable = [
         'school_id',
         'contact_id',
@@ -23,7 +23,7 @@ class Visit extends Model
     ];
 
     protected $casts = [
-        'visit_date' => 'date',
+        'visit_date' => 'datetime',
         'lat' => 'decimal:8',
         'lng' => 'decimal:8',
     ];
@@ -38,13 +38,13 @@ class Visit extends Model
         return $this->belongsTo(Contact::class);
     }
 
-    public function rep(): BelongsTo
+    public function assignedRep(): BelongsTo
     {
         return $this->belongsTo(User::class, 'rep_id');
     }
 
     public function books(): HasMany
-{
-    return $this->hasMany(VisitBook::class);
-}
+    {
+        return $this->hasMany(VisitBook::class);
+    }
 }

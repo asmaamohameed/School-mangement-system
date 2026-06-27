@@ -2,21 +2,21 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use App\Models\Visit;
-use App\Http\Resources\VisitResource;
 use App\Enums\UserRole;
-use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+use App\Http\Resources\VisitResource;
+use App\Models\Visit;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class VisitController extends Controller
 {
-  public function index(Request $request)
+    public function index(Request $request)
     {
         $user = $request->user();
-        
-        $query = Visit::with(['school', 'contact', 'representative', 'books']);
+
+        $query = Visit::with(['school', 'contact', 'assignedRep', 'books']);
 
         if ($user->role === UserRole::SALES_REP) {
             $query->where('rep_id', $user->id);
@@ -28,7 +28,6 @@ class VisitController extends Controller
 
         return VisitResource::collection($query->latest()->paginate(15));
     }
-
 
     public function store(Request $request): JsonResponse
     {
@@ -48,11 +47,11 @@ class VisitController extends Controller
         $user = $request->user();
 
         $visit = DB::transaction(function () use ($validated, $user) {
-            
+
             $visit = Visit::create([
                 'school_id' => $validated['school_id'],
                 'contact_id' => $validated['contact_id'],
-                'rep_id' => $user->id, 
+                'rep_id' => $user->id,
                 'visit_date' => $validated['visit_date'],
                 'notes' => $validated['notes'] ?? null,
                 'interest_level' => $validated['interest_level'],
@@ -67,7 +66,7 @@ class VisitController extends Controller
 
         return response()->json([
             'message' => 'Visits and books are created successfully',
-            'data' => new VisitResource($visit->load('books'))
+            'data' => new VisitResource($visit->load('books')),
         ], 201);
     }
 

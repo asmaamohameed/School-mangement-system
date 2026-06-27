@@ -11,22 +11,22 @@ class CheckRole
     /**
      * Handle an incoming request.
      *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
-     * @param  string  ...$roles
+     * @param  Closure(Request): (Response)  $next
      */
     public function handle(Request $request, Closure $next, string ...$roles): Response
     {
-        if(! $request->user()){
+        if (! $request->user()) {
             return response()->json([
                 'message' => 'You need to login first',
             ], 401);
         }
 
-        if(! in_array($request->user()->role->value, $roles)){
+        if (! in_array($request->user()->role->value, $roles)) {
             return response()->json([
                 'message' => 'You do not have permission to access this resource',
             ], 403);
         }
+
         return $next($request);
     }
 }

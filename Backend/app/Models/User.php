@@ -2,12 +2,12 @@
 
 namespace App\Models;
 
-use Laravel\Sanctum\HasApiTokens;
+use App\Enums\UserRole;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use App\Enums\UserRole;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
@@ -43,26 +43,27 @@ class User extends Authenticatable
         'role' => UserRole::class,
     ];
 
-    public function assignedSchools():HasMany
+    public function assignedSchools(): HasMany
     {
         return $this->hasMany(School::class, 'assigned_rep_id');
     }
-    public function currentSchools():HasMany
+
+    public function currentSchools(): HasMany
     {
         return $this->hasMany(School::class, 'assigned_to');
     }
 
-    public function visits():HasMany
+    public function visits(): HasMany
     {
         return $this->hasMany(Visit::class, 'rep_id');
     }
 
-    public function followUps():HasMany
+    public function followUps(): HasMany
     {
         return $this->hasMany(FollowUp::class, 'done_by');
     }
 
-    public function assignedTasks():HasMany
+    public function assignedTasks(): HasMany
     {
         return $this->hasMany(Task::class, 'assigned_to');
     }

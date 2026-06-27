@@ -2,9 +2,9 @@
 
 namespace Database\Factories;
 
+use App\Enums\UserRole;
 use App\Models\School;
 use App\Models\User;
-use App\Enums\UserRole;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -21,11 +21,11 @@ class SchoolFactory extends Factory
     {
         $salesRep = User::where('role', UserRole::SALES_REP)->inRandomOrder()->first();
         $assignedTo = $salesRep ?? User::where('role', UserRole::ADMIN)->inRandomOrder()->first();
-        
+
         return [
             'assigned_rep_id' => $salesRep->id ?? null,
             'assigned_to' => $assignedTo->id ?? null,
-            'name' => $this->faker->company . ' School',
+            'name' => $this->faker->company.' School',
             'school_type' => $this->faker->randomElement(['public', 'private', 'international']),
             'stage' => $this->faker->randomElement(['lead', 'qualified', 'interested', 'follow_up']),
             'city' => $this->faker->randomElement(['Cairo', 'Giza', 'Alexandria']),
