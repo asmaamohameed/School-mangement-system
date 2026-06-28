@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Enums\UserRole;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreContactRequest;
+use App\Http\Requests\UpdateContactRequest;
 use App\Http\Resources\ContactResource;
 use App\Models\Contact;
 use Illuminate\Http\JsonResponse;
@@ -12,7 +15,14 @@ class ContactController extends Controller
 {
     public function index(Request $request)
     {
+        $user = $request->user();
         $query = Contact::with('school');
+
+        if ($user->role === UserRole::SALES_REP) {
+            $query->whereHas('school', function ($q) use ($user) {
+                $q->where('assigned_rep_id', $user->id);
+            });
+        }
 
         if ($request->has('school_id')) {
             $query->where('school_id', $request->school_id);
@@ -21,15 +31,9 @@ class ContactController extends Controller
         return ContactResource::collection($query->latest()->paginate(15));
     }
 
-    public function store(Request $request): JsonResponse
+    public function store(StoreContactRequest $request): JsonResponse
     {
-        $validated = $request->validate([
-            'school_id' => ['required', 'exists:schools,id'],
-            'name' => ['required', 'string', 'max:255'],
-            'position' => ['required', 'string', 'max:255'],
-            'mobile' => ['required', 'string'],
-            'email' => ['nullable', 'email', 'max:255'],
-        ]);
+        $validated = $request->validated();
 
         $contact = Contact::create($validated);
 
@@ -41,18 +45,16 @@ class ContactController extends Controller
 
     public function show(Contact $contact): ContactResource
     {
+        $this->authorize('view', $contact);
+
         return new ContactResource($contact->load('school'));
     }
 
-    public function update(Request $request, Contact $contact): JsonResponse
+    public function update(UpdateContactRequest $request, Contact $contact): JsonResponse
     {
-        $validated = $request->validate([
-            'school_id' => ['sometimes', 'required', 'exists:schools,id'],
-            'name' => ['sometimes', 'required', 'string', 'max:255'],
-            'position' => ['sometimes', 'required', 'string', 'max:255'],
-            'mobile' => ['sometimes', 'required', 'string'],
-            'email' => ['nullable', 'email', 'max:255'],
-        ]);
+        $this->authorize('update', $contact);
+
+        $validated = $request->validated();
 
         $contact->update($validated);
 
@@ -64,6 +66,8 @@ class ContactController extends Controller
 
     public function destroy(Contact $contact): JsonResponse
     {
+        $this->authorize('delete', $contact);
+
         $contact->delete();
 
         return response()->json([

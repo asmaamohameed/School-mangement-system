@@ -16,12 +16,12 @@ class FollowUpResource extends JsonResource
                 'id' => $this->school_id,
                 'name' => $this->school?->name,
             ],
-            'user' => [
-                'id' => $this->user_id,
+            'done_by' => [
+                'id' => $this->done_by,
                 'name' => $this->user?->name,
             ],
             'follow_up_date' => $this->follow_up_date ? Carbon::parse($this->follow_up_date)->format('Y-m-d H:i') : null,
-            'follow_up_type' => $this->follow_up_type,
+            'type' => $this->type,
             'summary' => $this->summary,
             'next_action' => $this->next_action,
             'created_at' => $this->created_at?->format('Y-m-d H:i'),

@@ -2,6 +2,11 @@
 
 namespace App\Providers;
 
+use App\Models\Contact;
+use App\Models\School;
+use App\Policies\ContactPolicy;
+use App\Policies\SchoolPolicy;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -19,6 +24,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        Gate::policy(School::class, SchoolPolicy::class);
+        Gate::policy(Contact::class, ContactPolicy::class);
+
     }
 }

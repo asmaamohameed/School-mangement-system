@@ -5,7 +5,10 @@ namespace App\Http\Controllers\Api;
 use App\Enums\SchoolStage;
 use App\Enums\UserRole;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreSchoolRequest;
+use App\Http\Requests\UpdateSchoolRequest;
 use App\Http\Resources\SchoolResource;
+use App\Models\PipelineHistory;
 use App\Models\School;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -20,23 +23,16 @@ class SchoolController extends Controller
         $query = School::with('assignedRep');
 
         if ($user->role === UserRole::SALES_REP) {
-            $query->where('assigned_to', $user->id);
+            $query->where('assigned_rep_id', $user->id);
         }
         $schools = $query->latest()->paginate(10);
 
         return SchoolResource::collection($schools);
     }
 
-    public function store(Request $request): JsonResponse
+    public function store(StoreSchoolRequest $request): JsonResponse
     {
-        $validated = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'school_type' => ['required', 'string'],
-            'city' => ['required', 'string'],
-            'address' => ['required', 'string'],
-            'principal_name' => ['nullable', 'string'],
-            'principal_mobile' => ['nullable', 'string'],
-        ]);
+        $validated = $request->validated();
 
         $user = $request->user();
 
@@ -54,22 +50,18 @@ class SchoolController extends Controller
 
     public function show(School $school): SchoolResource
     {
+        $this->authorize('view', $school);
+
         $school->load(['assignedRep', 'contacts']);
 
         return new SchoolResource($school);
     }
 
-    public function update(Request $request, School $school): JsonResponse
+    public function update(UpdateSchoolRequest $request, School $school): JsonResponse
     {
-        $validated = $request->validate([
-            'name' => ['sometimes', 'required', 'string', 'max:255'],
-            'school_type' => ['sometimes', 'required', 'string'],
-            'city' => ['sometimes', 'required', 'string'],
-            'address' => ['sometimes', 'required', 'string'],
-            'principal_name' => ['nullable', 'string'],
-            'principal_mobile' => ['nullable', 'string'],
-            'stage' => ['sometimes', 'required', 'string'],
-        ]);
+        $this->authorize('update', $school);
+
+        $validated = $request->validated();
 
         $school->update($validated);
 
@@ -81,11 +73,8 @@ class SchoolController extends Controller
 
     public function destroy(Request $request, School $school): JsonResponse
     {
-        if ($request->user()->role->value !== 'admin') {
-            return response()->json([
-                'message' => 'Sorry, only admins can delete schools.',
-            ], 403);
-        }
+        $this->authorize('delete', $school);
+
         $school->delete();
 
         return response()->json([
@@ -95,13 +84,28 @@ class SchoolController extends Controller
 
     public function updateStage(Request $request, School $school): JsonResponse
     {
+        $this->authorize('update', $school);
+
         $validated = $request->validate([
             'stage' => ['required', Rule::enum(SchoolStage::class)],
         ]);
 
+        $fromStage = $school->stage;
+        $toStage = $validated['stage'];
+
         $school->update([
-            'stage' => $validated['stage'],
+            'stage' => $toStage,
         ]);
+
+        if ($fromStage !== $toStage) {
+            PipelineHistory::create([
+                'school_id' => $school->id,
+                'from_stage' => $fromStage,
+                'to_stage' => $toStage,
+                'changed_by' => $request->user()->id,
+                'changed_at' => now(),
+            ]);
+        }
 
         return response()->json([
             'message' => 'School moved to stage '.$school->stage->value.' successfully.',

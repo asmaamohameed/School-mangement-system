@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Enums\UserRole;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreVisitRequest;
 use App\Http\Resources\VisitResource;
 use App\Models\Visit;
 use Illuminate\Http\JsonResponse;
@@ -29,20 +30,9 @@ class VisitController extends Controller
         return VisitResource::collection($query->latest()->paginate(15));
     }
 
-    public function store(Request $request): JsonResponse
+    public function store(StoreVisitRequest $request): JsonResponse
     {
-        $validated = $request->validate([
-            'school_id' => ['required', 'exists:schools,id'],
-            'contact_id' => ['required', 'exists:contacts,id'],
-            'visit_date' => ['required', 'date'],
-            'notes' => ['nullable', 'string'],
-            'interest_level' => ['required', 'in:Cold,Warm,Interested,Highly Interested'],
-            'lat' => ['nullable', 'numeric'],
-            'lng' => ['nullable', 'numeric'],
-            'books' => ['required', 'array', 'min:1'],
-            'books.*.book_title' => ['required', 'string', 'max:255'],
-            'books.*.grade_level' => ['required', 'string', 'max:50'],
-        ]);
+        $validated = $request->validated();
 
         $user = $request->user();
 

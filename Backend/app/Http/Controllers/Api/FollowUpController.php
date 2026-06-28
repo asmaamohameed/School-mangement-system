@@ -2,14 +2,13 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Enums\FollowUpType;
 use App\Enums\UserRole;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreFollowUpRequest;
 use App\Http\Resources\FollowUpResource;
 use App\Models\FollowUp;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
 
 class FollowUpController extends Controller
 {
@@ -29,15 +28,9 @@ class FollowUpController extends Controller
         return FollowUpResource::collection($query->latest()->paginate(15));
     }
 
-    public function store(Request $request): JsonResponse
+    public function store(StoreFollowUpRequest $request): JsonResponse
     {
-        $validated = $request->validate([
-            'school_id' => ['required', 'exists:schools,id'],
-            'follow_up_date' => ['required', 'date'],
-            'type' => ['required', Rule::enum(FollowUpType::class)],
-            'summary' => ['required', 'string'],
-            'next_action' => ['nullable', 'string'],
-        ]);
+        $validated = $request->validated();
 
         $followUp = FollowUp::create(array_merge($validated, [
             'done_by' => $request->user()->id,
