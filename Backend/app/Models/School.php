@@ -13,7 +13,7 @@ class School extends Model
     use HasFactory;
 
     protected $fillable = [
-        'assigned_rep_id',
+        'created_by',
         'name',
         'stage',
         'assigned_to',
@@ -33,9 +33,9 @@ class School extends Model
         return $this->belongsTo(User::class, 'assigned_to');
     }
 
-    public function assignedRep(): BelongsTo
+    public function createdBy(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'assigned_rep_id');
+        return $this->belongsTo(User::class, 'created_by');
     }
 
     public function contacts(): HasMany

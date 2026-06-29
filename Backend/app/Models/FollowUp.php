@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\FollowUpStatus;
 use App\Enums\FollowUpType;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -16,12 +17,14 @@ class FollowUp extends Model
         'done_by',
         'follow_up_date',
         'type',
+        'status',
         'summary',
         'next_action',
     ];
 
     protected $casts = [
         'type' => FollowUpType::class,
+        'status' => FollowUpStatus::class,
         'follow_up_date' => 'datetime',
     ];
 

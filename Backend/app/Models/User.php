@@ -45,7 +45,7 @@ class User extends Authenticatable
 
     public function assignedSchools(): HasMany
     {
-        return $this->hasMany(School::class, 'assigned_rep_id');
+        return $this->hasMany(School::class, 'created_by');
     }
 
     public function currentSchools(): HasMany

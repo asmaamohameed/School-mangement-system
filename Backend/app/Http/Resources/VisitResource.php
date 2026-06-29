@@ -16,18 +16,11 @@ class VisitResource extends JsonResource
             'notes' => $this->notes,
             'lat' => $this->lat,
             'lng' => $this->lng,
-            'school' => [
-                'id' => $this->school_id,
-                'name' => $this->school?->name,
-            ],
-            'contact_person' => [
-                'id' => $this->contact_id,
-                'name' => $this->contact?->name,
-                'position' => $this->contact?->position,
-            ],
-            'assignedRep' => [
+            'school' => new SchoolResource($this->whenLoaded('school')),
+            'contact_person' => new ContactResource($this->whenLoaded('contact')),
+            'createdBy' => [
                 'id' => $this->rep_id,
-                'name' => $this->assignedRep?->name,
+                'name' => $this->createdBy?->name,
             ],
             'books_presented' => VisitBookResource::collection($this->whenLoaded('books')),
             'created_at' => $this->created_at?->format('Y-m-d H:i'),

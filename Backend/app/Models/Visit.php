@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\VisitInterestLevel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -24,6 +25,7 @@ class Visit extends Model
 
     protected $casts = [
         'visit_date' => 'datetime',
+        'interest_level' => VisitInterestLevel::class,
         'lat' => 'decimal:8',
         'lng' => 'decimal:8',
     ];
@@ -38,7 +40,7 @@ class Visit extends Model
         return $this->belongsTo(Contact::class);
     }
 
-    public function assignedRep(): BelongsTo
+    public function createdBy(): BelongsTo
     {
         return $this->belongsTo(User::class, 'rep_id');
     }

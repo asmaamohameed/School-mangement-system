@@ -4,8 +4,10 @@ namespace App\Providers;
 
 use App\Models\Contact;
 use App\Models\School;
+use App\Models\Task;
 use App\Policies\ContactPolicy;
 use App\Policies\SchoolPolicy;
+use App\Policies\TaskPolicy;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 
@@ -26,6 +28,7 @@ class AppServiceProvider extends ServiceProvider
     {
         Gate::policy(School::class, SchoolPolicy::class);
         Gate::policy(Contact::class, ContactPolicy::class);
+        Gate::policy(Task::class, TaskPolicy::class);
 
     }
 }

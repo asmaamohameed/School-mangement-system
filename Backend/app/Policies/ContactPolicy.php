@@ -25,7 +25,7 @@ class ContactPolicy
             return true;
         }
 
-        return $contact->school?->assigned_rep_id === $user->id;
+        return $contact->school?->createdBy?->id === $user->id;
     }
 
     /**
@@ -41,7 +41,11 @@ class ContactPolicy
      */
     public function update(User $user, Contact $contact): bool
     {
-        return false;
+        if ($user->role === UserRole::ADMIN) {
+            return true;
+        }
+
+        return $contact->school?->createdBy?->id === $user->id;
     }
 
     /**
@@ -49,7 +53,11 @@ class ContactPolicy
      */
     public function delete(User $user, Contact $contact): bool
     {
-        return false;
+        if ($user->role === UserRole::ADMIN) {
+            return true;
+        }
+
+        return $contact->school?->createdBy?->id === $user->id;
     }
 
     /**

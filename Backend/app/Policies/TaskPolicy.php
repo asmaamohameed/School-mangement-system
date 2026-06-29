@@ -3,10 +3,10 @@
 namespace App\Policies;
 
 use App\Enums\UserRole;
-use App\Models\School;
+use App\Models\Task;
 use App\Models\User;
 
-class SchoolPolicy
+class TaskPolicy
 {
     /**
      * Determine whether the user can view any models.
@@ -19,13 +19,13 @@ class SchoolPolicy
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, School $school): bool
+    public function view(User $user, Task $task): bool
     {
         if ($user->role === UserRole::ADMIN) {
             return true;
         }
 
-        return $school->created_by === $user->id;
+        return $task->assignedTo === $user->id || $task->createdBy === $user->id;
     }
 
     /**
@@ -39,33 +39,40 @@ class SchoolPolicy
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, School $school): bool
+    public function update(User $user, Task $task): bool
     {
-
         if ($user->role === UserRole::ADMIN) {
             return true;
         }
 
-        return $school->created_by === $user->id;
+        return $task->assignedTo === $user->id || $task->createdBy === $user->id;
+    }
+
+    public function complete(User $user, Task $task): bool
+    {
+        if ($user->role === UserRole::ADMIN) {
+            return true;
+        }
+
+        return $task->assignedTo === $user->id || $task->createdBy === $user->id;
     }
 
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, School $school): bool
+    public function delete(User $user, Task $task): bool
     {
-
         if ($user->role === UserRole::ADMIN) {
             return true;
         }
 
-        return $school->created_by === $user->id;
+        return $task->assignedTo === $user->id || $task->createdBy === $user->id;
     }
 
     /**
      * Determine whether the user can restore the model.
      */
-    public function restore(User $user, School $school): bool
+    public function restore(User $user, Task $task): bool
     {
         return false;
     }
@@ -73,7 +80,7 @@ class SchoolPolicy
     /**
      * Determine whether the user can permanently delete the model.
      */
-    public function forceDelete(User $user, School $school): bool
+    public function forceDelete(User $user, Task $task): bool
     {
         return false;
     }

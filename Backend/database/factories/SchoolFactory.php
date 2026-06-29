@@ -23,7 +23,7 @@ class SchoolFactory extends Factory
         $assignedTo = $salesRep ?? User::where('role', UserRole::ADMIN)->inRandomOrder()->first();
 
         return [
-            'assigned_rep_id' => $salesRep->id ?? null,
+            'created_by' => $salesRep->id ?? null,
             'assigned_to' => $assignedTo->id ?? null,
             'name' => $this->faker->company.' School',
             'school_type' => $this->faker->randomElement(['public', 'private', 'international']),

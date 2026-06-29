@@ -11,7 +11,7 @@ Table users {
 
 Table schools {
   id bigint [primary key]
-  assigned_rep_id bigint
+  created_by bigint
   name varchar
   stage varchar
   assigned_to bigint
@@ -75,6 +75,7 @@ Table follow_ups {
   type varchar
   summary text
   next_action text
+  status varchar
   created_at timestamp
   updated_at timestamp
 }
@@ -93,7 +94,7 @@ Table tasks {
 }
 
 // schools
-Ref: schools.assigned_rep_id > users.id
+Ref: schools.created_by > users.id
 
 // contacts
 Ref: contacts.school_id > schools.id

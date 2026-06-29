@@ -20,7 +20,7 @@ class ContactController extends Controller
 
         if ($user->role === UserRole::SALES_REP) {
             $query->whereHas('school', function ($q) use ($user) {
-                $q->where('assigned_rep_id', $user->id);
+                $q->where('created_by', $user->id);
             });
         }
 

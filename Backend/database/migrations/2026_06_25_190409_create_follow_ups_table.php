@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\FollowUpStatus;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -19,6 +20,7 @@ return new class extends Migration
             $table->string('type');
             $table->text('summary');
             $table->text('next_action')->nullable();
+            $table->string('status')->default(FollowUpStatus::PENDING);
             $table->timestamps();
         });
     }

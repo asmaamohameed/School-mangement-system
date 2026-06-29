@@ -24,8 +24,8 @@ class SchoolResource extends JsonResource
             'principal_name' => $this->principal_name,
             'principal_mobile' => $this->principal_mobile,
             'assigned_rep' => [
-                'id' => $this->assignedRep?->id,
-                'name' => $this->assignedRep?->name,
+                'id' => $this->createdBy?->id,
+                'name' => $this->createdBy?->name,
             ],
             'created_at' => $this->created_at->format('Y-m-d H:i:s'),
         ];

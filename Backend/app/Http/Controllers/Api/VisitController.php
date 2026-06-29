@@ -17,7 +17,7 @@ class VisitController extends Controller
     {
         $user = $request->user();
 
-        $query = Visit::with(['school', 'contact', 'assignedRep', 'books']);
+        $query = Visit::with(['school', 'contact', 'createdBy', 'books']);
 
         if ($user->role === UserRole::SALES_REP) {
             $query->where('rep_id', $user->id);
@@ -62,6 +62,6 @@ class VisitController extends Controller
 
     public function show(Visit $visit): VisitResource
     {
-        return new VisitResource($visit->load(['school', 'contact', 'assignedRep', 'books']));
+        return new VisitResource($visit->load(['school', 'contact', 'createdBy', 'books']));
     }
 }

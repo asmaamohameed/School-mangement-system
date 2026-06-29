@@ -2,8 +2,10 @@
 
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\ContactController;
+use App\Http\Controllers\Api\DashboardController;
 use App\Http\Controllers\Api\FollowUpController;
 use App\Http\Controllers\Api\SchoolController;
+use App\Http\Controllers\Api\TaskController;
 use App\Http\Controllers\Api\VisitController;
 use Illuminate\Support\Facades\Route;
 
@@ -26,5 +28,12 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Follow up routes
     Route::apiResource('follow-ups', FollowUpController::class)->only(['index', 'store', 'show']);
+
+    // Task routes
+    Route::apiResource('tasks', TaskController::class);
+    Route::patch('tasks/{task}/complete', [TaskController::class, 'complete']);
+
+    // Dashboard routes
+    Route::get('/dashboard', [DashboardController::class, 'index']);
 
 });

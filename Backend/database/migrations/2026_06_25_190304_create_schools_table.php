@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('schools', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('assigned_rep_id')->nullable()->constrained('users')->onDelete('set null');
+            $table->foreignId('created_by')->nullable()->constrained('users')->onDelete('set null');
             $table->string('name');
             $table->string('stage')->default('lead');
             $table->foreignId('assigned_to')->nullable()->constrained('users')->onDelete('set null');

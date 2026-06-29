@@ -20,10 +20,10 @@ class SchoolController extends Controller
     {
         $user = $request->user();
 
-        $query = School::with('assignedRep');
+        $query = School::with('createdBy');
 
         if ($user->role === UserRole::SALES_REP) {
-            $query->where('assigned_rep_id', $user->id);
+            $query->where('created_by', $user->id);
         }
         $schools = $query->latest()->paginate(10);
 
@@ -38,7 +38,7 @@ class SchoolController extends Controller
 
         $school = School::create(array_merge($validated, [
             'stage' => 'lead',
-            'assigned_rep_id' => $user->role === UserRole::SALES_REP ? $user->id : null,
+            'created_by' => $user->role === UserRole::SALES_REP ? $user->id : null,
             'assigned_to' => $user->role === UserRole::SALES_REP ? $user->id : null,
         ]));
 
@@ -52,7 +52,7 @@ class SchoolController extends Controller
     {
         $this->authorize('view', $school);
 
-        $school->load(['assignedRep', 'contacts']);
+        $school->load(['createdBy', 'contacts']);
 
         return new SchoolResource($school);
     }
@@ -67,7 +67,7 @@ class SchoolController extends Controller
 
         return response()->json([
             'message' => 'School updated successfully',
-            'data' => new SchoolResource($school->load('assignedRep')),
+            'data' => new SchoolResource($school->load('createdBy')),
         ], 200);
     }
 
