@@ -27,7 +27,7 @@ interface Visit {
   notes: string | null;
   school: { id: number; name: string };
   contact_person: { id: number; name: string; position: string };
-  assignedRep: { id: number; name: string };
+  createdBy: { id: number; name: string };
   books_presented: Book[];
 }
 

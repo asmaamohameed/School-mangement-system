@@ -3,6 +3,8 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import PageBreadcrumb from "@/components/common/PageBreadCrumb";
+import { ChevronDownIcon, TrashBinIcon, PencilIcon } from "@/icons";
+
 import {
   Table,
   TableBody,
@@ -176,7 +178,7 @@ export default function ContactsPage() {
                               href={`/contacts/${contact.id}/edit`}
                               className="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 text-sm font-medium"
                             >
-                              Edit
+                            <PencilIcon className="w-5 h-5" />
                             </Link>
                           )}
                           {isAdmin && (
@@ -184,7 +186,7 @@ export default function ContactsPage() {
                               onClick={() => handleDelete(contact.id)}
                               className="text-error-500 hover:text-error-600 text-sm font-medium"
                             >
-                              Delete
+                            <TrashBinIcon className="w-5 h-5" />
                             </button>
                           )}
                         </div>

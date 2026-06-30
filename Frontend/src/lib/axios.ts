@@ -41,6 +41,21 @@ axiosClient.interceptors.response.use(
           window.location.href = '/signin';
         }
       }
+
+      // 403 Forbidden: ownership policy violation (e.g., Sales Rep accessing
+      // a school/contact/visit that does not belong to them).
+      // Dispatch a global event so the toast provider can surface the message,
+      // and re-reject so individual pages may also respond as needed.
+      if (status === 403) {
+        if (typeof window !== 'undefined') {
+          const message =
+            error.response?.data?.message ||
+            'You are not authorised to perform this action.';
+          window.dispatchEvent(
+            new CustomEvent('app:forbidden', { detail: { message } })
+          );
+        }
+      }
     }
     return Promise.reject(error);
   }

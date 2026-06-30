@@ -13,6 +13,7 @@ import {
   ListIcon,
   TableIcon,
   UserCircleIcon,
+  TaskIcon,
 } from "../icons/index";
 
 type NavItem = {
@@ -28,7 +29,7 @@ const navItems: NavItem[] = [
     icon: <GridIcon />,
     name: "Dashboard",
     path: "/",
-    roles: ["admin"],
+    roles: ["admin", "sales_rep", "customer_service"],
   },
   {
     icon: <TableIcon />,
@@ -53,6 +54,12 @@ const navItems: NavItem[] = [
     name: "Follow-ups",
     path: "/follow-ups",
     roles: ["admin", "customer_service"],
+  },
+  {
+    icon: <TaskIcon />,
+    name: "Tasks",
+    path: "/tasks",
+    roles: ["admin", "sales_rep"],
   },
 ];
 

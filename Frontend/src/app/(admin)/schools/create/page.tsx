@@ -18,22 +18,44 @@ export default function CreateSchoolPage() {
   const [address, setAddress] = useState("");
   const [principalName, setPrincipalName] = useState("");
   const [principalMobile, setPrincipalMobile] = useState("");
-  
+
   const [errors, setErrors] = useState<Record<string, string[]>>({});
   const [loading, setLoading] = useState(false);
 
+  /** Client-side pre-flight for fields the backend now requires strictly. */
+  const validate = (): Record<string, string[]> => {
+    const clientErrors: Record<string, string[]> = {};
+    if (!principalName.trim()) {
+      clientErrors.principal_name = ["The principal name field is required."];
+    }
+    if (!principalMobile.trim()) {
+      clientErrors.principal_mobile = ["The principal mobile field is required."];
+    }
+    return clientErrors;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Run client-side validation before hitting the network
+    const clientErrors = validate();
+    if (Object.keys(clientErrors).length > 0) {
+      setErrors(clientErrors);
+      return;
+    }
+
     setErrors({});
     setLoading(true);
 
+    // NOTE: created_by and assigned_to are intentionally omitted —
+    // the backend automatically injects the logged-in user identity on store.
     const payload = {
       name,
       school_type: schoolType,
       city,
       address,
-      principal_name: principalName || null,
-      principal_mobile: principalMobile || null,
+      principal_name: principalName,
+      principal_mobile: principalMobile,
     };
 
     try {
@@ -42,7 +64,8 @@ export default function CreateSchoolPage() {
     } catch (error: any) {
       if (error.response && error.response.status === 422) {
         setErrors(error.response.data.errors || {});
-      } else {
+      } else if (error.response?.status !== 403) {
+        // 403 is handled globally by the Axios interceptor (ForbiddenToast)
         console.error("Form submission failed", error);
       }
     } finally {
@@ -98,11 +121,13 @@ export default function CreateSchoolPage() {
 
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
             <div>
-              <Label>Principal Name</Label>
+              {/* principal_name is now strictly required by the backend */}
+              <Label>Principal Name <span className="text-error-500">*</span></Label>
               <Input type="text" value={principalName} onChange={(e) => setPrincipalName(e.target.value)} error={!!errors.principal_name} hint={errors.principal_name?.[0]} disabled={loading} />
             </div>
             <div>
-              <Label>Principal Mobile</Label>
+              {/* principal_mobile is now strictly required by the backend */}
+              <Label>Principal Mobile <span className="text-error-500">*</span></Label>
               <Input type="text" value={principalMobile} onChange={(e) => setPrincipalMobile(e.target.value)} error={!!errors.principal_mobile} hint={errors.principal_mobile?.[0]} disabled={loading} />
             </div>
           </div>

@@ -7,6 +7,7 @@ import { Table, TableBody, TableCell, TableHeader, TableRow } from "@/components
 import Button from "@/components/ui/button/Button";
 import { useAuth } from "@/context/AuthContext";
 import axiosClient from "@/lib/axios";
+import { ChevronDownIcon, TrashBinIcon, PencilIcon } from "@/icons";
 
 interface School {
   id: number;
@@ -126,12 +127,12 @@ export default function SchoolsPage() {
                         <div className="flex items-center gap-3">
                           {canWrite && (
                             <Link href={`/schools/${school.id}/edit`} className="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 text-sm font-medium">
-                              Edit
+                              <PencilIcon className="w-5 h-5" />
                             </Link>
                           )}
                           {isAdmin && (
                             <button onClick={() => handleDeleteSchool(school.id)} className="text-error-500 hover:text-error-600 text-sm font-medium">
-                              Delete
+                              <TrashBinIcon className="w-5 h-5" />
                             </button>
                           )}
                         </div>

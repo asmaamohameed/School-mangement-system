@@ -9,6 +9,21 @@ import Button from "@/components/ui/button/Button";
 import axiosClient from "@/lib/axios";
 import { ChevronDownIcon } from "@/icons";
 
+/**
+ * SchoolStage enum values — must match the backend `SchoolStage` PHP enum exactly.
+ * Backend: lead | qualified | interested | follow_up | won | lost
+ */
+const SCHOOL_STAGES = [
+  { value: "lead", label: "Lead" },
+  { value: "qualified", label: "Qualified" },
+  { value: "interested", label: "Interested" },
+  { value: "follow_up", label: "Follow Up" },
+  { value: "won", label: "Won" },
+  { value: "lost", label: "Lost" },
+] as const;
+
+type SchoolStageValue = (typeof SCHOOL_STAGES)[number]["value"];
+
 export default function EditSchoolPage() {
   const router = useRouter();
   const params = useParams();
@@ -20,7 +35,9 @@ export default function EditSchoolPage() {
   const [address, setAddress] = useState("");
   const [principalName, setPrincipalName] = useState("");
   const [principalMobile, setPrincipalMobile] = useState("");
-  
+  /** stage is optional in the general update payload but must be a valid enum value when provided */
+  const [stage, setStage] = useState<SchoolStageValue | "">("");
+
   const [errors, setErrors] = useState<Record<string, string[]>>({});
   const [loading, setLoading] = useState(false);
   const [fetching, setFetching] = useState(true);
@@ -37,8 +54,12 @@ export default function EditSchoolPage() {
           setAddress(school.address);
           setPrincipalName(school.principal_name || "");
           setPrincipalMobile(school.principal_mobile || "");
-        } catch (error) {
-          console.error("Failed to fetch school details", error);
+          setStage((school.stage as SchoolStageValue) || "");
+        } catch (error: any) {
+          if (error.response?.status !== 403) {
+            // 403 is handled globally by the Axios interceptor (ForbiddenToast)
+            console.error("Failed to fetch school details", error);
+          }
         } finally {
           setFetching(false);
         }
@@ -52,7 +73,9 @@ export default function EditSchoolPage() {
     setErrors({});
     setLoading(true);
 
-    const payload = {
+    // Build the payload. Include `stage` only when it has a value so the backend
+    // applies Rule::enum(SchoolStage::class) validation only when the field is present.
+    const payload: Record<string, string | null> = {
       name,
       school_type: schoolType,
       city,
@@ -61,13 +84,19 @@ export default function EditSchoolPage() {
       principal_mobile: principalMobile || null,
     };
 
+    if (stage) {
+      // stage must strictly match one of the SchoolStage enum values
+      payload.stage = stage;
+    }
+
     try {
       await axiosClient.put(`/schools/${id}`, payload);
       router.push("/schools");
     } catch (error: any) {
       if (error.response && error.response.status === 422) {
         setErrors(error.response.data.errors || {});
-      } else {
+      } else if (error.response?.status !== 403) {
+        // 403 is handled globally by the Axios interceptor (ForbiddenToast)
         console.error("Form submission failed", error);
       }
     } finally {
@@ -138,6 +167,34 @@ export default function EditSchoolPage() {
               <Label>Principal Mobile</Label>
               <Input type="text" value={principalMobile} onChange={(e) => setPrincipalMobile(e.target.value)} error={!!errors.principal_mobile} hint={errors.principal_mobile?.[0]} disabled={loading} />
             </div>
+          </div>
+
+          {/* Stage — values must strictly match SchoolStage enum: lead | qualified | interested | follow_up | won | lost */}
+          <div>
+            <Label>Pipeline Stage</Label>
+            <div className="relative">
+              <select
+                className={`h-11 w-full appearance-none rounded-lg border border-gray-300 px-4 py-2.5 pr-11 text-sm shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800 ${
+                  stage ? "text-gray-800 dark:text-white/90" : "text-gray-400"
+                } ${errors.stage ? "border-error-500" : ""}`}
+                value={stage}
+                onChange={(e) => setStage(e.target.value as SchoolStageValue)}
+                disabled={loading}
+              >
+                <option value="">— No change —</option>
+                {SCHOOL_STAGES.map((s) => (
+                  <option key={s.value} value={s.value}>
+                    {s.label}
+                  </option>
+                ))}
+              </select>
+              <span className="absolute text-gray-500 -translate-y-1/2 pointer-events-none right-3 top-1/2 dark:text-gray-400">
+                <ChevronDownIcon />
+              </span>
+            </div>
+            {errors.stage && (
+              <p className="mt-1.5 text-xs text-error-500">{errors.stage[0]}</p>
+            )}
           </div>
 
           <div className="flex justify-end gap-4 mt-8">

@@ -14,14 +14,23 @@ import Button from "@/components/ui/button/Button";
 import { useAuth } from "@/context/AuthContext";
 import axiosClient from "@/lib/axios";
 
+/**
+ * FollowUp type — mirrors the backend FollowUpResource shape.
+ *
+ * Key renames applied per API schema update:
+ *   user_id       → done_by  (object with id & name)
+ *   follow_up_type → type
+ */
 interface FollowUp {
   id: number;
   follow_up_date: string;
-  follow_up_type: string;
+  /** Renamed from `follow_up_type` — matches backend FollowUpResource `type` key */
+  type: string;
   summary: string;
   next_action: string | null;
   school: { id: number; name: string };
-  user: { id: number; name: string };
+  /** Renamed from `user` — matches backend FollowUpResource `done_by` key */
+  done_by: { id: number; name: string };
 }
 
 const TYPE_COLORS: Record<string, string> = {
@@ -107,6 +116,12 @@ export default function FollowUpsPage() {
                     isHeader
                     className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
                   >
+                    Done By
+                  </TableCell>
+                  <TableCell
+                    isHeader
+                    className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
+                  >
                     Next Action
                   </TableCell>
                 </TableRow>
@@ -116,7 +131,7 @@ export default function FollowUpsPage() {
                 {loading ? (
                   <TableRow>
                     <TableCell
-                      colSpan={5}
+                      colSpan={6}
                       className="text-center py-8 text-gray-500"
                     >
                       Loading follow-ups...
@@ -125,7 +140,7 @@ export default function FollowUpsPage() {
                 ) : followUps.length === 0 ? (
                   <TableRow>
                     <TableCell
-                      colSpan={5}
+                      colSpan={6}
                       className="text-center py-8 text-gray-500"
                     >
                       No follow-ups found.
@@ -141,17 +156,21 @@ export default function FollowUpsPage() {
                         {fu.school.name}
                       </TableCell>
                       <TableCell className="px-5 py-4 text-start">
+                        {/* Bound to `fu.type` — renamed from `fu.follow_up_type` */}
                         <span
                           className={`inline-flex rounded-full px-2.5 py-0.5 text-xs font-medium capitalize ${
-                            TYPE_COLORS[fu.follow_up_type] ??
-                            "bg-gray-100 text-gray-600"
+                            TYPE_COLORS[fu.type] ?? "bg-gray-100 text-gray-600"
                           }`}
                         >
-                          {fu.follow_up_type}
+                          {fu.type}
                         </span>
                       </TableCell>
                       <TableCell className="px-5 py-4 text-start text-gray-500 dark:text-gray-400 max-w-[240px]">
                         <p className="truncate">{fu.summary}</p>
+                      </TableCell>
+                      <TableCell className="px-5 py-4 text-start text-gray-500 dark:text-gray-400">
+                        {/* Bound to `fu.done_by` — renamed from `fu.user` */}
+                        {fu.done_by?.name ?? "—"}
                       </TableCell>
                       <TableCell className="px-5 py-4 text-start text-gray-500 dark:text-gray-400 max-w-[200px]">
                         <p className="truncate">{fu.next_action ?? "—"}</p>
