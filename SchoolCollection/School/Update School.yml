@@ -1,0 +1,23 @@
+info:
+  name: Update School
+  type: http
+  seq: 4
+
+http:
+  method: PATCH
+  url: "{{base_url}}/schools/2"
+  body:
+    type: json
+    data: |-
+      {
+          "name": "Barton PLC Schoollll"
+      }
+  auth:
+    type: bearer
+    token: 19|21|n9uzS9YgCVdkR0W0hH1ZsSqTwmfczM8sFYL8LvjRfe4e660a
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

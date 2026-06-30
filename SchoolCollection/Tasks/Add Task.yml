@@ -1,0 +1,28 @@
+info:
+  name: Add Task
+  type: http
+  seq: 3
+
+http:
+  method: POST
+  url: "{{base_url}}/tasks/"
+  body:
+    type: json
+    data: |-
+      {
+          "school_id": 1,
+          "assigned_to" : 2,
+          "title": "First Visit Follow-up",
+          "description": "Call the principal to confirm the presentation date.",
+          "status": "pending",
+          "due_date": "2026-07-01"
+      }
+  auth:
+    type: bearer
+    token: 20|BrNO1ysAbd0NZ7ZbVu2eQngfIKCNGmZwy4a5EwLUe2f341e5
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

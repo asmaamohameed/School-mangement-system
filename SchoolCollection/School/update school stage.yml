@@ -1,0 +1,23 @@
+info:
+  name: update school stage
+  type: http
+  seq: 6
+
+http:
+  method: PATCH
+  url: "{{base_url}}/schools/1/stage"
+  body:
+    type: json
+    data: |-
+      {
+        "stage": "qualified"
+      }
+  auth:
+    type: bearer
+    token: 5|4L7I3w4DVDBg7VGhi4aJPLA4XiYUwk8T3cJcHV2ja03384e4
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

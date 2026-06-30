@@ -1,0 +1,23 @@
+info:
+  name: Update Contacts
+  type: http
+  seq: 4
+
+http:
+  method: PATCH
+  url: "{{base_url}}/contacts/21"
+  body:
+    type: json
+    data: |-
+      {
+          "mobile": "(678) 812-4806fhfghfggfg"
+      }
+  auth:
+    type: bearer
+    token: 20|BrNO1ysAbd0NZ7ZbVu2eQngfIKCNGmZwy4a5EwLUe2f341e5
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

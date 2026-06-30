@@ -1,0 +1,23 @@
+info:
+  name: Get contact
+  type: http
+  seq: 2
+
+http:
+  method: GET
+  url: "{{base_url}}/contacts/21"
+  headers:
+    - name: ""
+      value: ""
+  body:
+    type: json
+    data: ""
+  auth:
+    type: bearer
+    token: 4|KIxzyb6A4U1qGhSdj4Er1tzylsEXtzJaHp4YnY9c3a72c52c
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

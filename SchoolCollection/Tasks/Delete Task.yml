@@ -1,0 +1,20 @@
+info:
+  name: Delete Task
+  type: http
+  seq: 5
+
+http:
+  method: DELETE
+  url: "{{base_url}}/tasks/2"
+  body:
+    type: json
+    data: ""
+  auth:
+    type: bearer
+    token: 21|n9uzS9YgCVdkR0W0hH1ZsSqTwmfczM8sFYL8LvjRfe4e660a
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

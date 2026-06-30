@@ -1,0 +1,30 @@
+info:
+  name: Add Contact
+  type: http
+  seq: 3
+
+http:
+  method: POST
+  url: "{{base_url}}/contacts"
+  body:
+    type: json
+    data: |2-
+          {
+            "id": 19,
+            "school_id": 14,
+            "school_name": "Jaskolski Inc School",
+            "name": "Ms. Barbara Ebert Sr.",
+            "position": "Optical Assembler",
+            "mobile": "(678) 812-4806",
+            "email": "hoppe.junior@example.net",
+            "created_at": "2026-06-26 16:47"
+          }
+  auth:
+    type: bearer
+    token: 4|KIxzyb6A4U1qGhSdj4Er1tzylsEXtzJaHp4YnY9c3a72c52c
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

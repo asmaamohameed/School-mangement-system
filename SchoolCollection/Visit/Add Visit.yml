@@ -1,0 +1,39 @@
+info:
+  name: Add Visit
+  type: http
+  seq: 4
+
+http:
+  method: POST
+  url: "{{base_url}}/visits"
+  body:
+    type: json
+    data: |-
+      {
+        "school_id": 1,
+        "contact_id": 1,
+        "visit_date": "2026-06-27",
+        "interest_level": "Highly Interested",
+        "notes": "The coordinator is very interested in language books and we will be sending additional samples next week.",
+        "lat": 30.0444,
+        "lng": 31.2357,
+        "books": [
+          {
+            "book_title": "Inspire English - Level 1",
+            "grade_level": "Primary 1"
+          },
+          {
+            "book_title": "Inspire Math - Level 1",
+            "grade_level": "Primary 1"
+          }
+        ]
+      }
+  auth:
+    type: bearer
+    token: 4|KIxzyb6A4U1qGhSdj4Er1tzylsEXtzJaHp4YnY9c3a72c52c
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

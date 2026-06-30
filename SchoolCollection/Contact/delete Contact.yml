@@ -1,0 +1,17 @@
+info:
+  name: delete Contact
+  type: http
+  seq: 5
+
+http:
+  method: DELETE
+  url: "{{base_url}}/contacts/24"
+  auth:
+    type: bearer
+    token: 20|BrNO1ysAbd0NZ7ZbVu2eQngfIKCNGmZwy4a5EwLUe2f341e5
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

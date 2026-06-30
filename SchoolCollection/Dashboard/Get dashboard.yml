@@ -1,0 +1,17 @@
+info:
+  name: Get dashboard
+  type: http
+  seq: 1
+
+http:
+  method: GET
+  url: "{{base_url}}/dashboard"
+  auth:
+    type: bearer
+    token: 3|dsuVRaiufenfkNrve2uPFQLNmIfZlfFSWDi265UNafa56290
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

@@ -1,0 +1,28 @@
+info:
+  name: Add Follow-ups
+  type: http
+  seq: 4
+
+http:
+  method: POST
+  url: "{{base_url}}/follow-ups"
+  body:
+    type: json
+    data: |-
+      {
+      "school_id": 22,
+      "follow_up_date": "2026-06-27 14:00:00",
+      "type": "call",
+      "summary": "The procurement officer was contacted and reported that the budget will be approved next week.",
+      "next_action": "Please call back on Wednesday to confirm the office meeting."
+
+      }
+  auth:
+    type: bearer
+    token: 5|4L7I3w4DVDBg7VGhi4aJPLA4XiYUwk8T3cJcHV2ja03384e4
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
