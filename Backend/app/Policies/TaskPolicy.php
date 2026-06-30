@@ -25,7 +25,7 @@ class TaskPolicy
             return true;
         }
 
-        return $task->assignedTo === $user->id || $task->createdBy === $user->id;
+        return $task->assigned_to === $user->id || $task->created_by === $user->id;
     }
 
     /**
@@ -45,7 +45,7 @@ class TaskPolicy
             return true;
         }
 
-        return $task->assignedTo === $user->id || $task->createdBy === $user->id;
+        return $task->assigned_to === $user->id || $task->created_by === $user->id;
     }
 
     public function complete(User $user, Task $task): bool
@@ -54,7 +54,7 @@ class TaskPolicy
             return true;
         }
 
-        return $task->assignedTo === $user->id || $task->createdBy === $user->id;
+        return $task->assigned_to === $user->id || $task->created_by === $user->id;
     }
 
     /**
@@ -66,7 +66,7 @@ class TaskPolicy
             return true;
         }
 
-        return $task->assignedTo === $user->id || $task->createdBy === $user->id;
+        return $task->assigned_to === $user->id || $task->created_by === $user->id;
     }
 
     /**

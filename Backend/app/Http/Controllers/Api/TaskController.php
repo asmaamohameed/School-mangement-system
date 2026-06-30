@@ -19,7 +19,24 @@ class TaskController extends Controller
         $query = Task::with(['school', 'createdBy', 'assignedTo']);
 
         if ($user->role === UserRole::SALES_REP) {
-            $query->where('assigned_to', $user->id)->orWhere('created_by', $user->id);
+            $query->where(function ($q) use ($user) {
+                $q->where('assigned_to', $user->id)->orWhere('created_by', $user->id);
+            });
+        }
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('title', 'like', "%{$search}%")
+                    ->orWhere('description', 'like', "%{$search}%")
+                    ->orWhereHas('school', function ($sq) use ($search) {
+                        $sq->where('name', 'like', "%{$search}%");
+                    });
+            });
         }
 
         return TaskResource::collection($query->latest()->paginate(15));

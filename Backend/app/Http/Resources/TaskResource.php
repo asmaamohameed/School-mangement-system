@@ -23,13 +23,13 @@ class TaskResource extends JsonResource
             'created_at' => $this->created_at?->toDateTimeString(),
 
             'school' => new SchoolResource($this->whenLoaded('school')),
-            'assigned_to' => $this->whenLoaded('assigned_to', function () {
+            'assigned_to' => $this->whenLoaded('assignedTo', function () {
                 return [
-                    'id' => $this->assigned_to?->id,
-                    'name' => $this->assigned_to?->name,
+                    'id' => $this->assignedTo?->id,
+                    'name' => $this->assignedTo?->name,
                 ];
             }),
-            'created_by' => $this->whenLoaded('created_by', function () {
+            'created_by' => $this->whenLoaded('createdBy', function () {
                 return [
                     'id' => $this->createdBy?->id,
                     'name' => $this->createdBy?->name,

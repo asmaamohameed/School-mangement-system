@@ -7,6 +7,8 @@ use App\Http\Controllers\Api\FollowUpController;
 use App\Http\Controllers\Api\SchoolController;
 use App\Http\Controllers\Api\TaskController;
 use App\Http\Controllers\Api\VisitController;
+use App\Models\User;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 Route::post('login', [AuthController::class, 'login']);
@@ -35,5 +37,12 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Dashboard routes
     Route::get('/dashboard', [DashboardController::class, 'index']);
+
+    // User routes (for assignment dropdowns)
+    Route::get('users', function (Request $request) {
+        return response()->json([
+            'data' => User::where('is_active', true)->get(['id', 'name', 'role']),
+        ]);
+    });
 
 });
